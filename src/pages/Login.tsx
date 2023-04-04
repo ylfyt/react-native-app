@@ -1,15 +1,28 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {
   Text,
   View,
   TextInput,
-  ToastAndroid,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
+import {delay} from '../utils/delay';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {ParamListBase} from '@react-navigation/native';
 
-interface ILoginProps {}
+type Props = NativeStackScreenProps<ParamListBase, 'Login'>;
 
-export const Login: FC<ILoginProps> = () => {
+export const Login: FC<Props> = ({navigation}) => {
+  const [loading, setLoading] = useState(false);
+
+  const login = async () => {
+    setLoading(true);
+    await delay(3000);
+    setLoading(false);
+
+    navigation.replace('Home');
+  };
+
   return (
     <View
       style={{
@@ -66,15 +79,24 @@ export const Login: FC<ILoginProps> = () => {
             paddingVertical: 8,
             display: 'flex',
             alignItems: 'center',
-            borderRadius: 20,
-            elevation: 2
-          }}  
+            borderRadius: 15,
+            elevation: 2,
+            minHeight: 40,
+            justifyContent: 'center',
+          }}
           onPress={() => {
-            ToastAndroid.show('ok', ToastAndroid.SHORT);
+            login();
           }}>
-          <Text style={{
-            fontWeight: '500'
-          }}>Submit</Text>
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <Text
+              style={{
+                fontWeight: '500',
+              }}>
+              Submit
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>
