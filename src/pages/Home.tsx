@@ -14,18 +14,16 @@ import {useAuthContext} from '../contexts/auth';
 import RNFetchBlob from 'rn-fetch-blob';
 import {IProduct} from '../interfaces/product';
 import {ProductTable} from '../components/product-table';
+import {readProductFromCsv} from '../utils/read-csv-line';
 
 type Props = NativeStackScreenProps<ParamListBase, 'Home'>;
-
-const products: IProduct[] = Array(100).fill({
-  id: '1',
-  name: 'a',
-  description: 'b',
-});
 
 export const Home: FC<Props> = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [loadingDownload, setLoadingDownload] = useState(false);
+  const [loadingShow, setLoadingShow] = useState(false);
+  const [lastDownloadedFile, setLastDownloadedFile] = useState('');
+  const [products, setProducts] = useState<IProduct[]>([]);
 
   const {username} = useAuthContext();
 
@@ -68,6 +66,7 @@ export const Home: FC<Props> = ({navigation}) => {
         'https://drive.google.com/uc?export=view&id=1dJ4dIN9AO6FNWXzBBV-Bvq7jhZbQMl88',
       );
 
+      setLastDownloadedFile(path);
       ToastAndroid.show(`Success! ${filename}`, ToastAndroid.SHORT);
     } catch (err) {
       if (err instanceof Error) {
@@ -75,6 +74,17 @@ export const Home: FC<Props> = ({navigation}) => {
       }
     }
     setLoadingDownload(false);
+  };
+
+  const showData = async () => {
+    if (lastDownloadedFile === '') return;
+
+    setLoadingShow(true);
+    try {
+      const data = await readProductFromCsv(lastDownloadedFile, 1, 100);
+      setProducts(data);
+    } catch (error) {}
+    setLoadingShow(false);
   };
 
   const logout = async () => {
@@ -129,16 +139,21 @@ export const Home: FC<Props> = ({navigation}) => {
           height: '80%',
           display: 'flex',
           alignItems: 'center',
-          gap: 20,
           width: '100%',
+          marginTop: 15,
+          gap: 10,
         }}>
-        <View>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            width: '100%',
+          }}>
           <LoadingButton
             style={{
-              backgroundColor: '#ffaaaa',
-              width: 200,
-              paddingHorizontal: 20,
-              paddingVertical: 8,
+              backgroundColor: '#aaaaff',
+              width: 100,
               borderRadius: 10,
               minHeight: 40,
             }}
@@ -147,11 +162,27 @@ export const Home: FC<Props> = ({navigation}) => {
             isDisabled={loadingDownload}
             text="Download File"
           />
+          <LoadingButton
+            style={{
+              backgroundColor: '#aaaaff',
+              width: 100,
+              paddingVertical: 8,
+              borderRadius: 10,
+              minHeight: 40,
+            }}
+            isLoading={loadingShow}
+            isDisabled={loadingShow}
+            onPress={() => {
+              showData();
+            }}
+            text="Show Data"
+          />
         </View>
         <ScrollView
           style={{
             width: '100%',
             height: '100%',
+            padding: 0,
           }}>
           <ProductTable products={products} />
         </ScrollView>

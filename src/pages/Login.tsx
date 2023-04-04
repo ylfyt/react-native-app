@@ -54,6 +54,7 @@ export const Login: FC<Props> = ({navigation}) => {
             fontSize: 20,
             fontWeight: '700',
             width: '100%',
+            color: 'black'
           }}>
           Login
         </Text>
@@ -62,22 +63,24 @@ export const Login: FC<Props> = ({navigation}) => {
             width: '100%',
             backgroundColor: '#fff',
             padding: 10,
-            color: '#000',
+            color: 'black',
             borderRadius: 10,
           }}
           placeholder="Username"
+          placeholderTextColor="#aaa"
           onChange={e => {
             setUsername(e.nativeEvent.text);
           }}
-        />
+          />
         <TextInput
           style={{
             width: '100%',
             backgroundColor: '#fff',
             padding: 10,
-            color: '#000',
+            color: 'black',
             borderRadius: 10,
           }}
+          placeholderTextColor="#aaa"
           placeholder="Password"
           onChange={e => {
             setPassword(e.nativeEvent.text);
