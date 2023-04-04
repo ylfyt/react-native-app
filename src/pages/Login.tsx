@@ -4,6 +4,7 @@ import {delay} from '../utils/delay';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ParamListBase} from '@react-navigation/native';
 import LoadingButton from '../components/loading-button';
+import {useAuthContext} from '../contexts/auth';
 
 type Props = NativeStackScreenProps<ParamListBase, 'Login'>;
 
@@ -12,6 +13,8 @@ export const Login: FC<Props> = ({navigation}) => {
   const [password, setPassword] = useState('');
 
   const [loading, setLoading] = useState(false);
+
+  const {setUsername: setUsernameCtx} = useAuthContext();
 
   const login = async () => {
     setLoading(true);
@@ -23,6 +26,7 @@ export const Login: FC<Props> = ({navigation}) => {
       return;
     }
 
+    setUsernameCtx(username);
     navigation.replace('Home');
   };
 
