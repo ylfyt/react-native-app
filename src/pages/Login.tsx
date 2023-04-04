@@ -1,24 +1,27 @@
 import React, {FC, useState} from 'react';
-import {
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import {Text, View, TextInput, ToastAndroid} from 'react-native';
 import {delay} from '../utils/delay';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ParamListBase} from '@react-navigation/native';
+import LoadingButton from '../components/loading-button';
 
 type Props = NativeStackScreenProps<ParamListBase, 'Login'>;
 
 export const Login: FC<Props> = ({navigation}) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
   const [loading, setLoading] = useState(false);
 
   const login = async () => {
     setLoading(true);
     await delay(3000);
     setLoading(false);
+
+    if (password !== '1234') {
+      ToastAndroid.show('Password incorrect (1234)...', ToastAndroid.SHORT);
+      return;
+    }
 
     navigation.replace('Home');
   };
@@ -59,6 +62,9 @@ export const Login: FC<Props> = ({navigation}) => {
             borderRadius: 10,
           }}
           placeholder="Username"
+          onChange={e => {
+            setUsername(e.nativeEvent.text);
+          }}
         />
         <TextInput
           style={{
@@ -69,35 +75,27 @@ export const Login: FC<Props> = ({navigation}) => {
             borderRadius: 10,
           }}
           placeholder="Password"
+          onChange={e => {
+            setPassword(e.nativeEvent.text);
+          }}
+          secureTextEntry={true}
         />
-
-        <TouchableOpacity
+        <LoadingButton
           style={{
             backgroundColor: '#aaaaff',
             width: 100,
             paddingHorizontal: 20,
             paddingVertical: 8,
-            display: 'flex',
-            alignItems: 'center',
-            borderRadius: 15,
-            elevation: 2,
+            borderRadius: 10,
             minHeight: 40,
-            justifyContent: 'center',
           }}
+          isDisabled={loading || username === '' || password === ''}
+          isLoading={loading}
           onPress={() => {
             login();
-          }}>
-          {loading ? (
-            <ActivityIndicator />
-          ) : (
-            <Text
-              style={{
-                fontWeight: '500',
-              }}>
-              Submit
-            </Text>
-          )}
-        </TouchableOpacity>
+          }}
+          text="Submit"
+        />
       </View>
     </View>
   );

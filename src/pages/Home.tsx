@@ -3,6 +3,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {FC, useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {delay} from '../utils/delay';
+import LoadingButton from '../components/loading-button';
 
 type Props = NativeStackScreenProps<ParamListBase, 'Home'>;
 
@@ -27,19 +28,22 @@ export const Home: FC<Props> = ({navigation}) => {
       }}>
       <Text>Hello</Text>
 
-      <TouchableOpacity
+      <LoadingButton
         style={{
-          paddingHorizontal: 20,
-          paddingVertical: 10,
           backgroundColor: '#ffaaaa',
+          width: 100,
+          paddingHorizontal: 20,
+          paddingVertical: 8,
           borderRadius: 10,
-          elevation: 2,
+          minHeight: 40,
         }}
+        isDisabled={loading}
+        isLoading={loading}
         onPress={() => {
           logout();
-        }}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
+        }}
+        text="Logout"
+      />
     </View>
   );
 };
