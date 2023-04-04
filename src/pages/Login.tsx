@@ -18,7 +18,7 @@ export const Login: FC<Props> = ({navigation}) => {
 
   const login = async () => {
     setLoading(true);
-    await delay(3000);
+    await delay(500);
     setLoading(false);
 
     if (password !== '1234') {

@@ -13,17 +13,17 @@ const App = () => {
       <NavigationContainer>
         <MainStack.Navigator>
           <MainStack.Screen
-            name="Login"
-            component={Login}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <MainStack.Screen
             name="Home"
             component={Home}
             options={{
               title: 'EquPOS',
+            }}
+          />
+          <MainStack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              headerShown: false,
             }}
           />
         </MainStack.Navigator>
